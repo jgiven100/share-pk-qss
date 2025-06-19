@@ -94,8 +94,3 @@ href_l = np.round(np.random.uniform(5, 150, total), 4)
 * `(e*Ir)_pt` := normalized axial (or deivatoric) strain @ phase transformation
 
 > Note: Both points C3 and C4 have undergone "phase transformation". However, the subscript `_pt` is specifically used for cases where phase transformation occurs without reaching the quasi-steady state.
-
-"Critical state" (or "steady state") (points D1, D2, D3, or D4)
-* `(p/pc)_cs` := normalized mean effective stress @ critical state (or steady state)
-* `(q/pc)_cs` := normalized deviatoric stress @ critical state (or steady state)
-* `(e*Ir)_cs` := normalized axial (or deivatoric) strain @ critical state (or steady state)

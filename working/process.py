@@ -278,11 +278,20 @@ def main():
             print("Warning [in main]: no reponse id found!!")
             quit()
 
+        # Print status update
+        if t % 1000 == 0:
+            print(f"COUNT: {t:06d} of {total}")
+
+    print(f"COUNT: {total} of {total}")
+    print("Saving to .csv files...")
+
     # Save in .csv
     for i, save in enumerate([save_0, save_1, save_2]):
         with open(f"save_{i}.csv", "w") as file:
             for s in save:
                 file.write(f"{s}\n")
+
+    print("DONE!")
 
 
 if __name__ == "__main__":
