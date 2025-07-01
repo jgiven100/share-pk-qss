@@ -1,14 +1,16 @@
 import numpy as np
 import json
 import os
+import argparse
 
 
-def generate_inputs():
+def generate_inputs(n):
     """Generate suite of input files (.json) for NorSand simulations
 
     Parameters
     ----------
-    None
+    n : int
+        Number of outputs with the same material parameters
 
     Returns
     -------
@@ -43,51 +45,54 @@ def generate_inputs():
     href_l = np.round(np.random.uniform(5, 150, total), 4)
 
     # Variable state parameters
-    psi0_l = np.random.uniform(-0.2, 0.2, total)
+    psi0_l = []
+    for i in range(n):
+        psi0_l.append(np.random.uniform(-0.2, 0.2, total))
 
     for t in range(total):
-        # Compute current void ratio
-        psi0 = psi0_l[t]
-        e0 = psi0 + (Gamma - lambd * np.log(p0 / pref))
+        for i in range(n):
+            # Compute current void ratio
+            psi0 = psi0_l[i][t]
+            e0 = psi0 + (Gamma - lambd * np.log(p0 / pref))
 
-        # Generate input.json
-        data = {
-            "params": {
-                "pref": pref,
-                "Gref": Ir * pref,
-                "ne": n_e,
-                "nu": nu_l[t],
-                "Gamma": Gamma,
-                "lambd": lambd,
-                "Mtc": Mtc,
-                "N": N_l[t],
-                "href": href_l[t],
-                "np": n_p,
-                "nh": n_h,
-                "chitc": chitc_l[t],
-            },
-            "opts": {
-                "loose": "ED",
-                "csl": "linear",
-                "test": "txc",
-                "dvol": "undrained",
-                "Dmin": "approx2",
-            },
-            "sim": {
-                "p0": p0,
-                "q0": q0,
-                "pi0": pi0,
-                "e0": e0,
-                "epsQ": 0.4,
-                "name": f"ns-{t:06d}/",
-            },
-        }
+            # Generate input.json
+            data = {
+                "params": {
+                    "pref": pref,
+                    "Gref": Ir * pref,
+                    "ne": n_e,
+                    "nu": nu_l[t],
+                    "Gamma": Gamma,
+                    "lambd": lambd,
+                    "Mtc": Mtc,
+                    "N": N_l[t],
+                    "href": href_l[t],
+                    "np": n_p,
+                    "nh": n_h,
+                    "chitc": chitc_l[t],
+                },
+                "opts": {
+                    "loose": "ED",
+                    "csl": "linear",
+                    "test": "txc",
+                    "dvol": "undrained",
+                    "Dmin": "approx2",
+                },
+                "sim": {
+                    "p0": p0,
+                    "q0": q0,
+                    "pi0": pi0,
+                    "e0": e0,
+                    "epsQ": 0.4,
+                    "name": f"ns-{t:06d}/",
+                },
+            }
 
-        # Save file
-        file_name = f"ns-{t:06d}.json"
-        file_path = os.path.join(output_dir, file_name)
-        with open(file_path, "w") as f:
-            json.dump(data, f, indent=4)
+            # Save file
+            file_name = f"ns-{t:06d}-{i:d}.json"
+            file_path = os.path.join(output_dir, file_name)
+            with open(file_path, "w") as f:
+                json.dump(data, f, indent=4)
 
         # Print status update
         if t % 1000 == 0:
@@ -99,7 +104,20 @@ def generate_inputs():
 
 def main():
 
-    generate_inputs()
+    parser = argparse.ArgumentParser(
+        description="Generate number of inputs based on passed integer.",
+    )
+    parser.add_argument(
+        "-n",
+        "--integer",
+        type=int,
+        choices=range(1, 4),
+        required=True,
+    )
+
+    args = parser.parse_args()
+
+    generate_inputs(args.integer)
 
 
 if __name__ == "__main__":

@@ -118,9 +118,7 @@ def compute_points(t, params, df):
     plt.savefig(f"figures/{id}/ns-{t:06d}.png", dpi=100)
     plt.close()
 
-    return [
-        id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss, eps_Ir_qss
-    ]
+    return [id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss, eps_Ir_qss]
 
 
 def read_input_output(dir_name):
@@ -170,19 +168,19 @@ def write_header(id):
         String with header
     """
 
-    hdr = "psi0,nu,N,chitc,href,id,"
+    hdr = "nu,N,chitc,href,id,"
 
     # Softening
     if id == 0:
-        hdr += "col0,col1,col2"
+        hdr += "col0,col1,col2,col3"
 
     # Quasi-steady state
     elif id == 1:
-        hdr += "col0,col1,col2,col3,col4,col5"
+        hdr += "col0,col1,col2,col3,col4,col5,col6"
 
     # Hardening
     elif id == 2:
-        hdr += "col0,col1,col2"
+        hdr += "col0,col1,col2,col3"
 
     # Warn and quit
     else:
@@ -211,12 +209,12 @@ def write_message(params, points):
     msg = ""
 
     # Print material params
-    msg += f"{points[1]:.6f},"
     msg += f"{params['nu']:.4f},"
     msg += f"{params['N']:.4f},"
     msg += f"{params['chitc']:.4f},"
     msg += f"{params['href']:.4f},"
     msg += f"{points[0]:d}"
+    msg += f"{points[1]:.6f},"
 
     # Softening
     if points[0] == 0:
