@@ -2,7 +2,7 @@
 Peak, quasi-steady state, and phase transformation values for a lot of simulations. 
 
 
-## Model settings
+## Global model settings
 
 * Critical state line: Roscoe et al. (1958) [linear]
 * Operational stress ratio: Extended Dafalias [symmetric]
@@ -15,7 +15,7 @@ Peak, quasi-steady state, and phase transformation values for a lot of simulatio
   * "Bonus" softening term included when `D^p > 0`
 
 
-## Material parameters
+## Gloabl material parameters
 
 | Parameter | Value  |
 |-----------|--------|
@@ -32,50 +32,8 @@ Peak, quasi-steady state, and phase transformation values for a lot of simulatio
 | chi_tc    | varies |
 | h_ref     | varies |
 
-```python
-# Variable state parameters
-psi0_l = np.random.uniform(-0.2, 0.2, total)
 
-# Variable material parameters
-nu_l = np.round(np.random.uniform(0.1, 0.35, total), 4)
-N_l = np.round(np.random.uniform(0.1, 0.6, total), 4)
-chitc_l = np.round(np.random.uniform(1.0, 6.0, total), 4)
-href_l = np.round(np.random.uniform(5, 150, total), 4)
-```
-
-> Total test: `total=150000`
-
-
-## Other notes
-
-### File layout
-
-| Response type       | ID |
-|---------------------|----|
-| Softening           | 0  |
-| Quasi-steady state  | 1  |
-| Monotonic hardening | 2  |
-
-`save-0.csv`
-
-| Col 0   | Col 1   | Col 2   |
-|---------|---------|---------|
-|(p/pc)_pk|(q/pc)_pk|(e*Ir)_pk|
-
-`save-1.csv`
-
-| Col 0   | Col 1   | Col 2   | Col 3    | Col 4    | Col 5    |
-|---------|---------|---------|----------|----------|----------|
-|(p/pc)_pk|(q/pc)_pk|(e*Ir)_pk|(p/pc)_qss|(q/pc)_qss|(e*Ir)_qss|
-
-`save-2.csv`
-
-| Col 0   | Col 1   | Col 2   |
-|---------|---------|---------|
-|(p/pc)_pt|(q/pc)_pt|(e*Ir)_pt|
-
-
-### Definitions
+## Definitions
 ![Representative stress-strain relationships for very loose, loose, medium-dense, and dense sand (undrained shearing).](figures/sand-stress-paths.png)
 
 "Peak" (points B1, B2, or B3)
