@@ -1,23 +1,8 @@
 # 1-Test
-One `psi_0` for each combination of the material parameter (`nu`, `N`, `chi_tc`, and `h_ref`).
+One `psi_0` for each combination of the material parameters.
 
 
-## Material parameters
-
-| Parameter | Value  |
-|-----------|--------|
-| pref [Pa] | 1.0e+5 |
-| Mtc       | 1.24   |
-| Gamma     | 0.910  |
-| lambda    | 0.014  |
-| I_r       | 150.0  |
-| n_e       | 1.0    |
-| n_p       | 0.0    |
-| psi_0     | varies |
-| nu        | varies |
-| N         | varies | 
-| chi_tc    | varies |
-| h_ref     | varies |
+## Varying material parameters
 
 ```python
 total=150000
