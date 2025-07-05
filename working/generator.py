@@ -84,7 +84,7 @@ def generate_inputs(n):
                     "pi0": pi0,
                     "e0": e0,
                     "epsQ": 0.4,
-                    "name": f"ns-{t:06d}/",
+                    "name": f"ns-{t:06d}-{i:d}/",
                 },
             }
 
@@ -105,8 +105,7 @@ def generate_inputs(n):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Generate number of inputs based on passed integer.",
-    )
+        description="Generate number of inputs based on passed integer.", )
     parser.add_argument(
         "-n",
         "--integer",
