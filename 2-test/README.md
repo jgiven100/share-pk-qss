@@ -70,3 +70,11 @@ href_l = np.round(np.random.uniform(5, 150, total), 4)
 | Col 0   | Col 1   | Col 2   | Col 3   | Col 4   | Col 5   | Col 6   | Col 7   |
 |---------|---------|---------|---------|---------|---------|---------|---------|
 | psi_0   |(p/pc)_pt|(q/pc)_pt|(e*Ir)_pt| psi_0   |(p/pc)_pt|(q/pc)_pt|(e*Ir)_pt|
+
+### Processing
+
+Output file saved in 4 column format:
+
+```python
+hdr = 'p q epsQ psi'
+```
