@@ -5,7 +5,7 @@ One `psi_0` for each combination of the material parameters.
 ## Varying material parameters
 
 ```python
-total=150000
+total = 150000
 
 # Variable state parameters
 psi0_l = np.random.uniform(-0.2, 0.2, total)

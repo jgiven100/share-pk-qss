@@ -215,8 +215,8 @@ def write_message(params, points):
     msg += f"{params['N']:.4f},"
     msg += f"{params['chitc']:.4f},"
     msg += f"{params['href']:.4f},"
-    msg += f"{points[0]:d}"
-    msg += f"{points[1]:.6f},"
+    msg += f"{points[0]:d},"
+    msg += f"{points[1]:.6f}"
 
     # Softening
     if points[0] == 0:
