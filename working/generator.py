@@ -105,7 +105,8 @@ def generate_inputs(n):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Generate number of inputs based on passed integer.", )
+        description="Generate number of inputs based on passed integer.",
+    )
     parser.add_argument(
         "-n",
         "--integer",
