@@ -157,7 +157,9 @@ def compute_points(t, params, dfs):
     plt.savefig(f"figures/{id}/ns-{t:06d}.png", dpi=100)
     plt.close()
 
-    return [id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss, eps_Ir_qss]
+    return [
+        id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss, eps_Ir_qss
+    ]
 
 
 def read_input_output(dir_names):
