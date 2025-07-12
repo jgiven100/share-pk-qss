@@ -274,38 +274,52 @@ def write_message(params, points):
     msg += f"{params['N']:.4f},"
     msg += f"{params['chitc']:.4f},"
     msg += f"{params['href']:.4f},"
-    msg += f"{points[0]:d},"
-    msg += f"{points[1]:.6f}"
+    msg += f"{points[0]:d}"
+
+    # Get order
+    index = sorted(range(len(points[1])), key=lambda i: points[1][i])
 
     # Softening -- softening
     if points[0] == 0:
-        for i in range(2, 5):
-            msg += f",{points[i]:.6e}"
+        for i in index:
+            for j in range(2, 6):
+                msg += f",{points[j][i]:.6e}"
 
     # Softening -- quasi-steady state
     elif points[0] == 1:
-        for i in range(2, 8):
-            msg += f",{points[i]:.6e}"
+        i = index[0]
+        for j in range(2, 6):
+            msg += f",{points[j][i]:.6e}"
+        i = index[1]
+        for j in range(2, 9):
+            msg += f",{points[j][i]:.6e}"
 
     # Softening -- hardening
     elif points[0] == 2:
-        for i in range(2, 5):
-            msg += f",{points[i]:.6e}"
+        for i in index:
+            for j in range(2, 6):
+                msg += f",{points[j][i]:.6e}"
 
     # Quasi-steady state -- quasi-steady state
     elif points[0] == 3:
-        for i in range(2, 5):
-            msg += f",{points[i]:.6e}"
+        for i in index:
+            for j in range(2, 9):
+                msg += f",{points[j][i]:.6e}"
 
     # Quasi-steady state -- hardening
     elif points[0] == 4:
-        for i in range(2, 8):
-            msg += f",{points[i]:.6e}"
+        i = index[0]
+        for j in range(2, 9):
+            msg += f",{points[j][i]:.6e}"
+        i = index[1]
+        for j in range(2, 6):
+            msg += f",{points[j][i]:.6e}"
 
     # Hardening -- hardening
     elif points[0] == 5:
-        for i in range(2, 5):
-            msg += f",{points[i]:.6e}"
+        for i in index:
+            for j in range(2, 6):
+                msg += f",{points[j][i]:.6e}"
 
     # Warn and quit
     else:
@@ -319,12 +333,12 @@ def main():
 
     total = 150000
 
-    save_0_0 = [write_header(0)]
-    save_0_1 = [write_header(1)]
-    save_0_2 = [write_header(2)]
-    save_1_1 = [write_header(3)]
-    save_1_2 = [write_header(4)]
-    save_2_2 = [write_header(5)]
+    save_0 = [write_header(0)]
+    save_1 = [write_header(1)]
+    save_2 = [write_header(2)]
+    save_3 = [write_header(3)]
+    save_4 = [write_header(4)]
+    save_5 = [write_header(5)]
 
     for t in range(total):
 
@@ -340,27 +354,27 @@ def main():
 
         # Softening -- softening
         if points[0] == 0:
-            save_0_0.append(msg)
+            save_0.append(msg)
 
         # Softening -- quasi-steady state
         elif points[0] == 1:
-            save_0_1.append(msg)
+            save_1.append(msg)
 
         # Softening -- hardening
         elif points[0] == 2:
-            save_0_2.append(msg)
+            save_2.append(msg)
 
         # Quasi-steady state -- quasi-steady state
         elif points[0] == 3:
-            save_1_1.append(msg)
+            save_3.append(msg)
 
         # Quasi-steady state -- hardening
         elif points[0] == 4:
-            save_1_2.append(msg)
+            save_4.append(msg)
 
         # Hardening -- hardening
         elif points[0] == 5:
-            save_2_2.append(msg)
+            save_5.append(msg)
 
         # Warn and quit
         else:
@@ -375,17 +389,8 @@ def main():
     print("Saving to .csv files...")
 
     # Save in .csv
-    saves = {
-        "save_0_0": save_0_0,
-        "save_0_1": save_0_1,
-        "save_0_2": save_0_2,
-        "save_1_1": save_1_1,
-        "save_1_2": save_1_2,
-        "save_2_2": save_2_2,
-    }
-
-    for name, save in saves.items():
-        with open(f"{name}.csv", "w") as file:
+    for i, save in enumerate([save_0, save_1, save_2, save_3, save_4, save_5]):
+        with open(f"save_{i}.csv", "w") as file:
             for s in save:
                 file.write(f"{s}\n")
 
