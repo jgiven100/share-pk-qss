@@ -24,7 +24,7 @@ def compute_points(t, params, dfs):
     Returns
     -------
     points : array
-        1x8 array of arrays with id, initial state parameter, stress, strains
+        Array of arrays with id, initial state parameter, stress, strains
     """
 
     # Shear rigidity
@@ -53,7 +53,7 @@ def compute_points(t, params, dfs):
         psi0[i] = df[0, 3]
 
         # Compute steady state
-        q_ss = params["Mtc"] * np.exp(-psi0 / params["lambd"]) * p0
+        q_ss = params["Mtc"] * np.exp(-psi0[i] / params["lambd"]) * p0
 
         monotonic = True
         reversal = False
@@ -108,27 +108,27 @@ def compute_points(t, params, dfs):
 
     # Softening -- softening
     if sorted(id) == [0, 0]:
-        id = 0
+        id_single = 0
 
     # Softening -- quasi-steady state
     elif sorted(id) == [0, 1]:
-        id = 1
+        id_single = 1
 
     # Softening -- hardening
     elif sorted(id) == [0, 2]:
-        id = 2
+        id_single = 2
 
     # Quasi-steady state -- quasi-steady state
     elif sorted(id) == [1, 1]:
-        id = 3
+        id_single = 3
 
     # Quasi-steady state -- hardening
     elif sorted(id) == [1, 2]:
-        id = 4
+        id_single = 4
 
     # Hardening -- hardening
     elif sorted(id) == [2, 2]:
-        id = 5
+        id_single = 5
 
     # Warn and quit
     else:
@@ -154,11 +154,12 @@ def compute_points(t, params, dfs):
 
     # Save
     plt.tight_layout()
-    plt.savefig(f"figures/{id}/ns-{t:06d}.png", dpi=100)
+    plt.savefig(f"figures/{id_single}/ns-{t:06d}.png", dpi=100)
     plt.close()
 
     return [
-        id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss, eps_Ir_qss
+        id_single, id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss,
+        eps_Ir_qss
     ]
 
 
@@ -258,7 +259,7 @@ def write_message(params, points):
     params : dict
         Dictionary with material parameters
     points : array
-        1x7 array with initial state parameter, stress, strains
+        Array of arrays with id, initial state parameter, stress, strains
 
     Returns
     -------
@@ -328,12 +329,10 @@ def main():
     for t in range(total):
 
         # Load data
-        # TODO: handle 2 tests here
         fnames = [f"ns-{t:06d}-0", f"ns-{t:06d}-1"]
         params, dfs = read_input_output(fnames)
 
         # Compute points of interest
-        # TODO: pass 2 tests here
         points = compute_points(t, params, dfs)
 
         # Write message
