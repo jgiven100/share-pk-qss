@@ -18,7 +18,6 @@ def generate_inputs(n):
     """
 
     # Save directory
-    # output_dir = "/mnt/c/Users/jgive/Documents/norsand-inputs/json-output"
     output_dir = os.getcwd() + "/json-output"
 
     # Initial stress state
