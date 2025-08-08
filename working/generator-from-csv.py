@@ -96,8 +96,7 @@ def generate_inputs(row, n, row_num, test_num):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Generate number of inputs based on passed integer.",
-    )
+        description="Generate number of inputs based on passed integer.", )
 
     parser.add_argument(
         "--npsi0",
@@ -110,7 +109,7 @@ def main():
         "--nrows",
         type=int,
         default=5,
-        help="Number of psi_0 for each set of materials params",
+        help="Number of tests for each set of materials params",
     )
 
     args = parser.parse_args()
