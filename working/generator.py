@@ -1,16 +1,14 @@
 import numpy as np
 import json
 import os
-import argparse
 
 
-def generate_inputs(n):
+def generate_inputs():
     """Generate suite of input files (.json) for NorSand simulations
 
     Parameters
     ----------
-    n : int
-        Number of outputs with the same material parameters
+    None
 
     Returns
     -------
@@ -20,103 +18,128 @@ def generate_inputs(n):
     # Save directory
     output_dir = os.getcwd() + "/json-output"
 
-    # Initial stress state
-    pref = 100.0e3
-    p0 = 160.0e3
-    pi0 = np.ceil(p0 / np.exp(1))
-    q0 = 0
-
     # Constant material parameters
     Mtc = 1.24
+
     Gamma = 0.91
     lambd = 0.014
-    Ir = 150
-    n_e = 1.0
-    n_p = 0.0
-    n_h = 2.0
 
-    total = 150000
+    Gamma_xi = 0.934
+    lambd_xi = 0.019
+    xi = 0.7
 
-    # Variable material parameters
-    nu_l = np.round(np.random.uniform(0.1, 0.35, total), 4)
-    N_l = np.round(np.random.uniform(0.1, 0.6, total), 4)
-    chitc_l = np.round(np.random.uniform(1.0, 6.0, total), 4)
-    href_l = np.round(np.random.uniform(5, 150, total), 4)
+    pref = 100.0e3
 
-    # Variable state parameters
-    psi0_l = []
-    for i in range(n):
-        psi0_l.append(np.random.uniform(-0.2, 0.2, total))
+    # Variable parameters
+    Ir = [50, 100, 150, 300, 600]
+    N_p = [-0.5, 0.0, -0.5]
+    E0 = np.linspace(1.05, 0.75, 61)
+    P0 = np.geomspace(8e3, 1024e3, 21)
 
-    for t in range(total):
-        for i in range(n):
-            # Compute current void ratio
-            psi0 = psi0_l[i][t]
-            e0 = psi0 + (Gamma - lambd * np.log(p0 / pref))
+    total = 61 * 21 * 5 * 3
 
-            # Generate input.json
-            data = {
-                "params": {
-                    "pref": pref,
-                    "Gref": Ir * pref,
-                    "ne": n_e,
-                    "nu": nu_l[t],
-                    "Gamma": Gamma,
-                    "lambd": lambd,
-                    "Mtc": Mtc,
-                    "N": N_l[t],
-                    "href": href_l[t],
-                    "np": n_p,
-                    "nh": n_h,
-                    "chitc": chitc_l[t],
-                },
-                "opts": {
-                    "loose": "ED",
-                    "csl": "linear",
-                    "test": "txc",
-                    "dvol": "undrained",
-                    "Dmin": "approx2",
-                },
-                "sim": {
-                    "p0": p0,
-                    "q0": q0,
-                    "pi0": pi0,
-                    "e0": e0,
-                    "epsQ": 0.4,
-                    "name": f"ns-{t:06d}-{i:d}/",
-                },
-            }
+    n = 0
+    for i, n_p in enumerate(N_p):
+        for ir in Ir:
+            for p0 in P0:
+                for e0 in E0:
 
-            # Save file
-            file_name = f"ns-{t:06d}-{i:d}.json"
-            file_path = os.path.join(output_dir, file_name)
-            with open(file_path, "w") as f:
-                json.dump(data, f, indent=4)
+                    # Initial stress state
+                    pi0 = np.ceil(p0 / np.exp(1))
 
-        # Print status update
-        if t % 1000 == 0:
-            print(f"COUNT: {t:06d} of {total}")
+                    if i < 2:
+                        # Compute current void ratio
+                        # e0 = psi0 + (Gamma - lambd * np.log(p0 / pref))
 
-    print(f"COUNT: {total} of {total}")
-    print("DONE!")
+                        # Generate input.json
+                        data = {
+                            "params": {
+                                "pref": pref,
+                                "Gref": ir * pref,
+                                "ne": 0.5,
+                                "nu": 0.15,
+                                "Gamma": Gamma,
+                                "lambd": lambd,
+                                "Mtc": Mtc,
+                                "N": 0.35,
+                                "href": 50.0,
+                                "np": n_p,
+                                "nh": 2.0,
+                                "chitc": 4.0,
+                            },
+                            "opts": {
+                                "loose": "ED",
+                                "csl": "linear",
+                                "test": "txc",
+                                "dvol": "undrained",
+                                "Dmin": "approx2",
+                            },
+                            "sim": {
+                                "p0": p0,
+                                "q0": 0,
+                                "pi0": pi0,
+                                "e0": e0,
+                                "epsQ": 0.4,
+                                "name": f"n{n:06d}/",
+                            },
+                        }
+
+                    else:
+                        # Compute current void ratio
+                        # e0 = psi0 + (Gamma_xi -
+                        #              lambd_xi * np.power(p0 / pref, xi))
+
+                        # Generate input.json
+                        data = {
+                            "params": {
+                                "pref": pref,
+                                "Gref": ir * pref,
+                                "ne": 0.5,
+                                "nu": 0.15,
+                                "Gamma_xi": Gamma_xi,
+                                "lambd_xi": lambd_xi,
+                                "xi": xi,
+                                "Mtc": Mtc,
+                                "N": 0.35,
+                                "href": 50.0,
+                                "np": n_p,
+                                "nh": 2.0,
+                                "chitc": 4.0,
+                            },
+                            "opts": {
+                                "loose": "ED",
+                                "csl": "power",
+                                "test": "txc",
+                                "dvol": "undrained",
+                                "Dmin": "approx2",
+                            },
+                            "sim": {
+                                "p0": p0,
+                                "q0": 0,
+                                "pi0": pi0,
+                                "e0": e0,
+                                "epsQ": 0.4,
+                                "name": f"n{n:06d}/",
+                            },
+                        }
+
+                    # Save file
+                    file_name = f"ns-{n:05d}.json"
+                    file_path = os.path.join(output_dir, file_name)
+                    with open(file_path, "w") as f:
+                        json.dump(data, f, indent=4)
+
+                    if n % 1000 == 0:
+                        print(f"{str(n).zfill(5)} of {total} done")
+
+                    n += 1
+
+    print(f"{n} of {total} done")
 
 
 def main():
 
-    parser = argparse.ArgumentParser(
-        description="Generate number of inputs based on passed integer.",
-    )
-    parser.add_argument(
-        "-n",
-        "--integer",
-        type=int,
-        choices=range(1, 4),
-        required=True,
-    )
-
-    args = parser.parse_args()
-
-    generate_inputs(args.integer)
+    generate_inputs()
 
 
 if __name__ == "__main__":
