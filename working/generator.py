@@ -31,15 +31,16 @@ def generate_inputs():
     pref = 100.0e3
 
     # Variable parameters
-    Ir = [50, 100, 150, 300, 600]
-    N_p = [-0.5, 0.0, -0.5]
+    Ir = [100, 150, 300]
+    N_e = [1.0, +0.5, 0.75, 0.5, +0.5, 0.5]
+    N_p = [0.0, -0.5, 0.00, 0.0, -0.5, 0.0]
     E0 = np.linspace(1.05, 0.75, 61)
-    P0 = np.geomspace(8e3, 1024e3, 21)
+    P0 = np.geomspace(8e3, 1024e3, 59)
 
-    total = 61 * 21 * 5 * 3
+    total = 61 * 59 * 3 * 6
 
     n = 0
-    for i, n_p in enumerate(N_p):
+    for i, (n_e, n_p) in enumerate(zip(N_e, N_p)):
         for ir in Ir:
             for p0 in P0:
                 for e0 in E0:
@@ -47,7 +48,7 @@ def generate_inputs():
                     # Initial stress state
                     pi0 = np.ceil(p0 / np.exp(1))
 
-                    if i < 2:
+                    if i < 4:
                         # Compute current void ratio
                         # e0 = psi0 + (Gamma - lambd * np.log(p0 / pref))
 
@@ -56,7 +57,7 @@ def generate_inputs():
                             "params": {
                                 "pref": pref,
                                 "Gref": ir * pref,
-                                "ne": 0.5,
+                                "ne": n_e,
                                 "nu": 0.15,
                                 "Gamma": Gamma,
                                 "lambd": lambd,
@@ -94,7 +95,7 @@ def generate_inputs():
                             "params": {
                                 "pref": pref,
                                 "Gref": ir * pref,
-                                "ne": 0.5,
+                                "ne": n_e,
                                 "nu": 0.15,
                                 "Gamma_xi": Gamma_xi,
                                 "lambd_xi": lambd_xi,
