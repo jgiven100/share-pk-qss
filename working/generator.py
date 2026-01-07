@@ -27,11 +27,11 @@ def generate_inputs(n):
     q0 = 0
 
     # Constant material parameters
-    Mtc = 1.24
-    Gamma = 0.91
-    lambd = 0.014
-    Ir = 150
-    n_e = 1.0
+    Mtc = 1.328
+    Gamma = 1.0709
+    lambd = 0.0225
+    Ir = 197.75
+    n_e = 0.79
     n_p = 0.0
     n_h = 2.0
 
@@ -104,8 +104,7 @@ def generate_inputs(n):
 def main():
 
     parser = argparse.ArgumentParser(
-        description="Generate number of inputs based on passed integer.",
-    )
+        description="Generate number of inputs based on passed integer.", )
     parser.add_argument(
         "-n",
         "--integer",
