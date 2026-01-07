@@ -20,11 +20,11 @@ Peak, quasi-steady state, and phase transformation values for a lot of simulatio
 | Parameter | Value  |
 |-----------|--------|
 | pref [Pa] | 1.0e+5 |
-| Mtc       | 1.24   |
-| Gamma     | 0.910  |
-| lambda    | 0.014  |
-| I_r       | 150.0  |
-| n_e       | 1.0    |
+| Mtc       | 1.328  |
+| Gamma     | 1.0709 |
+| lambda    | 0.0225 |
+| I_r       | 97.75  |
+| n_e       | 0.79   |
 | n_p       | 0.0    |
 | psi_0     | varies |
 | nu        | varies |
