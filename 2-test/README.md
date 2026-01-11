@@ -5,7 +5,7 @@ Two different `psi_0` for each combination of the material parameters.
 ## Varying material parameters
 
 ```python
-total = 150000
+total = 100000
 
 # Variable state parameters
 psi0_l = []
@@ -28,12 +28,12 @@ href_l = np.round(np.random.uniform(5, 150, total), 4)
 
 | First response type | Second response type | ID  | Quantity |
 |---------------------|----------------------|-----|----------|
-| Softening           | Softening            | 0   | 30,432   |
-| Softening           | Quasi-steady state   | 1   | 26,342   |
-| Softening           | Monotonic hardening  | 2   | 47,955   |
-| Quasi-steady state  | Quasi-steady state   | 3   | 11,278   |
-| Quasi-steady state  | Monotonic hardening  | 4   | 11,980   |
-| Monotonic hardening | Monotonic hardening  | 5   | 22,013   |
+| Softening           | Softening            | 0   | 16,733   |
+| Softening           | Quasi-steady state   | 1   | 23,276   |
+| Softening           | Monotonic hardening  | 2   | 24,663   |
+| Quasi-steady state  | Quasi-steady state   | 3   | 13,456   |
+| Quasi-steady state  | Monotonic hardening  | 4   | 10,295   |
+| Monotonic hardening | Monotonic hardening  | 5   | 11,577   |
 
 `save_0.csv`
 

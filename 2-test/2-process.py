@@ -331,7 +331,7 @@ def write_message(params, points):
 
 def main():
 
-    total = 150000
+    total = 100000
 
     save_0 = [write_header(0)]
     save_1 = [write_header(1)]

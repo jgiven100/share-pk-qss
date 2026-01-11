@@ -35,7 +35,7 @@ def generate_inputs(n):
     n_p = 0.0
     n_h = 2.0
 
-    total = 150000
+    total = 100000
 
     # Variable material parameters
     nu_l = np.round(np.random.uniform(0.1, 0.35, total), 4)
