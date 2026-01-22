@@ -25,7 +25,7 @@ Peak, quasi-steady state, and phase transformation values for a lot of simulatio
 | lambda    | 0.0225 |
 | I_r       | 97.75  |
 | n_e       | 0.79   |
-| n_p       | 0.0    |
+| n_p       |-0.21   |
 | psi_0     | varies |
 | nu        | varies |
 | N         | varies | 

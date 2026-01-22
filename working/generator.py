@@ -32,7 +32,7 @@ def generate_inputs(n):
     lambd = 0.0225
     Ir = 197.75
     n_e = 0.79
-    n_p = 0.0
+    n_p = -0.21
     n_h = 2.0
 
     total = 100000
