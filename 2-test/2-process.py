@@ -47,6 +47,10 @@ def compute_points(t, params, dfs):
     # Initial state parameter
     psi0 = [0, 0]
 
+    p_list = [[0 for _ in range(5)], [0 for _ in range(5)]]
+    q_list = [[0 for _ in range(5)], [0 for _ in range(5)]]
+    eps_list = [[0 for _ in range(5)], [0 for _ in range(5)]]
+
     for i, df in enumerate(dfs):
         # Initial values
         p0 = df[0, 0]
@@ -79,6 +83,19 @@ def compute_points(t, params, dfs):
 
                     id[i] = 0
 
+                    # Save epsilon*
+                    for j, multiplier in enumerate([0.5, 1, 2, 3, 4]):
+                        index_itr = int(n * multiplier)
+
+                        if (index_itr > len(df[:, 0])):
+                            print(f"[STEP {t}]index is too big... ", end='')
+                            print(f"{index_itr} vs. {len(df[:,0])}")
+                            index_itr = -1
+
+                        p_list[i][j] = df[index_itr, 0] / p0
+                        q_list[i][j] = df[index_itr, 1] / p0
+                        eps_list[i][j] = df[index_itr, 2] * Ir
+
             # Sample reverses at QSS
             if (not monotonic) and (not reversal) and (dq > 0):
 
@@ -94,17 +111,48 @@ def compute_points(t, params, dfs):
 
                     id[i] = 1
 
+                    # Save epsilon*
+                    for j, multiplier in enumerate([0.5, 1, 2, 3, 4]):
+                        index_itr = int(n * multiplier)
+
+                        if (index_itr > len(df[:, 0])):
+                            print(f"[STEP {t}]index is too big... ", end='')
+                            print(f"{index_itr} vs. {len(df[:,0])}")
+                            index_itr = -1
+
+                        p_list[i][j] = df[index_itr, 0] / p0
+                        q_list[i][j] = df[index_itr, 1] / p0
+                        eps_list[i][j] = df[index_itr, 2] * Ir
+
+                    # Override 0.5epsilon* with pk
+                    p_list[i][0] = p_pc_pk[i]
+                    q_list[i][0] = q_pc_pk[i]
+                    eps_list[i][0] = eps_Ir_pk[i]
+
                     break
 
         # Hardening
         if monotonic:
             # Find index for global minimum of mean effective stress
-            index = np.argmin(df[:, 0])
+            index_min = np.argmin(df[:, 0])
 
             # Phase transformation point
-            p_pc_pk[i] = df[index, 0] / p0
-            q_pc_pk[i] = df[index, 1] / p0
-            eps_Ir_pk[i] = df[index, 2] * Ir
+            p_pc_pk[i] = df[index_min, 0] / p0
+            q_pc_pk[i] = df[index_min, 1] / p0
+            eps_Ir_pk[i] = df[index_min, 2] * Ir
+
+            # Save epsilon*
+            for j, multiplier in enumerate([0.5, 1, 2, 3, 4]):
+                index_itr = int(index_min * multiplier)
+
+                if (index_itr > len(df[:, 0])):
+                    print(f"[STEP {t}]index is too big... ", end='')
+                    print(f"{index_itr} vs. {len(df[:,0])}")
+                    index_itr = -1
+
+                p_list[i][j] = df[index_itr, 0] / p0
+                q_list[i][j] = df[index_itr, 1] / p0
+                eps_list[i][j] = df[index_itr, 2] * Ir
 
     # Softening -- softening
     if sorted(id) == [0, 0]:
@@ -152,15 +200,15 @@ def compute_points(t, params, dfs):
             axs[0].plot(p_pc_qss[i], q_pc_qss[i], "rx")
             axs[1].plot(eps_Ir_qss[i], q_pc_qss[i], "rx")
 
+        axs[0].plot(p_list[i], q_list[i], "k.")
+        axs[1].plot(eps_list[i], q_list[i], "k.")
+
     # Save
     plt.tight_layout()
     plt.savefig(f"figures/{id_single}/ns-{t:06d}.png", dpi=100)
     plt.close()
 
-    return [
-        id_single, id, psi0, p_pc_pk, q_pc_pk, eps_Ir_pk, p_pc_qss, q_pc_qss,
-        eps_Ir_qss
-    ]
+    return [id_single, id, psi0, p_list, q_list, eps_list]
 
 
 def read_input_output(dir_names):
@@ -220,28 +268,45 @@ def write_header(id):
 
     # Softening -- softening
     if id == 0:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Softening -- quasi-steady state
     elif id == 1:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7,col8,col9,col10"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Softening -- hardening
     elif id == 2:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Quasi-steady state -- quasi-steady state
     elif id == 3:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7"
-        hdr += ",col8,col9,col10,col11,col12,col13"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Quasi-steady state -- hardening
     elif id == 4:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7,col8,col9,col10"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Hardening -- hardening
     elif id == 5:
-        hdr += "col0,col1,col2,col3,col4,col5,col6,col7"
+        hdr += "col00,col01,col02,col03,col04,col05,col06,col07,col08,col09,"
+        hdr += "col10,col11,col12,col13,col14,col15,col16,col17,col18,col19,"
+        hdr += "col21,col21,col22,col23,col24,col25,col26,col27,col28,col29,"
+        hdr += "col30,col31"
 
     # Warn and quit
     else:
@@ -282,44 +347,50 @@ def write_message(params, points):
     # Softening -- softening
     if points[0] == 0:
         for i in index:
-            for j in range(2, 6):
-                msg += f",{points[j][i]:.6e}"
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Softening -- quasi-steady state
     elif points[0] == 1:
-        i = index[0]
-        for j in range(2, 6):
-            msg += f",{points[j][i]:.6e}"
-        i = index[1]
-        for j in range(2, 9):
-            msg += f",{points[j][i]:.6e}"
+        for i in index:
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Softening -- hardening
     elif points[0] == 2:
         for i in index:
-            for j in range(2, 6):
-                msg += f",{points[j][i]:.6e}"
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Quasi-steady state -- quasi-steady state
     elif points[0] == 3:
         for i in index:
-            for j in range(2, 9):
-                msg += f",{points[j][i]:.6e}"
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Quasi-steady state -- hardening
     elif points[0] == 4:
-        i = index[0]
-        for j in range(2, 9):
-            msg += f",{points[j][i]:.6e}"
-        i = index[1]
-        for j in range(2, 6):
-            msg += f",{points[j][i]:.6e}"
+        for i in index:
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Hardening -- hardening
     elif points[0] == 5:
         for i in index:
-            for j in range(2, 6):
-                msg += f",{points[j][i]:.6e}"
+            msg += f",{points[2][i]:.6e}"
+            for j in range(3, 6):
+                for k in range(5):
+                    msg += f",{points[j][i][k]:.6e}"
 
     # Warn and quit
     else:
