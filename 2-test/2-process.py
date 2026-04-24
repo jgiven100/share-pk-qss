@@ -30,6 +30,8 @@ def compute_points(t, params, dfs):
     # Shear rigidity
     Ir = params["Gref"] / params["pref"]
 
+    ne = params["ne"]
+
     # Peak, quasi-steady state, phase transformation points
     p_pc_pk = [-1, -1]
     q_pc_pk = [-1, -1]
@@ -79,7 +81,7 @@ def compute_points(t, params, dfs):
 
                     p_pc_pk[i] = df[n, 0] / p0
                     q_pc_pk[i] = df[n, 1] / p0
-                    eps_Ir_pk[i] = df[n, 2] * Ir
+                    eps_Ir_pk[i] = df[n, 2] * Ir * np.power(p0, ne - 1)
 
                     id[i] = 0
 
@@ -94,7 +96,8 @@ def compute_points(t, params, dfs):
 
                         p_list[i][j] = df[index_itr, 0] / p0
                         q_list[i][j] = df[index_itr, 1] / p0
-                        eps_list[i][j] = df[index_itr, 2] * Ir
+                        eps_list[i][j] = df[index_itr, 2] * Ir * np.power(
+                            p0, ne - 1)
 
             # Sample reverses at QSS
             if (not monotonic) and (not reversal) and (dq > 0):
@@ -107,7 +110,7 @@ def compute_points(t, params, dfs):
 
                     p_pc_qss[i] = df[n, 0] / p0
                     q_pc_qss[i] = df[n, 1] / p0
-                    eps_Ir_qss[i] = df[n, 2] * Ir
+                    eps_Ir_qss[i] = df[n, 2] * Ir * np.power(p0, ne - 1)
 
                     id[i] = 1
 
@@ -122,7 +125,8 @@ def compute_points(t, params, dfs):
 
                         p_list[i][j] = df[index_itr, 0] / p0
                         q_list[i][j] = df[index_itr, 1] / p0
-                        eps_list[i][j] = df[index_itr, 2] * Ir
+                        eps_list[i][j] = df[index_itr, 2] * Ir * np.power(
+                            p0, ne - 1)
 
                     # Override 0.5epsilon* with pk
                     p_list[i][0] = p_pc_pk[i]
@@ -139,7 +143,7 @@ def compute_points(t, params, dfs):
             # Phase transformation point
             p_pc_pk[i] = df[index_min, 0] / p0
             q_pc_pk[i] = df[index_min, 1] / p0
-            eps_Ir_pk[i] = df[index_min, 2] * Ir
+            eps_Ir_pk[i] = df[index_min, 2] * Ir * np.power(p0, ne - 1)
 
             # Save epsilon*
             for j, multiplier in enumerate([0.5, 1, 2, 3, 4]):
@@ -152,7 +156,7 @@ def compute_points(t, params, dfs):
 
                 p_list[i][j] = df[index_itr, 0] / p0
                 q_list[i][j] = df[index_itr, 1] / p0
-                eps_list[i][j] = df[index_itr, 2] * Ir
+                eps_list[i][j] = df[index_itr, 2] * Ir * np.power(p0, ne - 1)
 
     # Softening -- softening
     if sorted(id) == [0, 0]:
@@ -190,7 +194,7 @@ def compute_points(t, params, dfs):
 
         # Plot normalized stress and strain paths
         axs[0].plot(df[:, 0] / p0, df[:, 1] / p0)
-        axs[1].plot(df[:, 2] * Ir, df[:, 1] / p0)
+        axs[1].plot(df[:, 2] * Ir * np.power(p0, ne - 1), df[:, 1] / p0)
 
         # Plot points of interest
         axs[0].plot(p_pc_pk[i], q_pc_pk[i], "r.")

@@ -30,7 +30,7 @@ def generate_inputs(n):
     Mtc = 1.328
     Gamma = 1.0709
     lambd = 0.0225
-    Ir = 197.75
+    Ir = 97.75
     n_e = 0.79
     n_p = -0.21
     n_h = 2.0

@@ -28,12 +28,15 @@ href_l = np.round(np.random.uniform(5, 150, total), 4)
 
 | First response type | Second response type | ID  | Quantity |
 |---------------------|----------------------|-----|----------|
-| Softening           | Softening            | 0   | 16,979   |
-| Softening           | Quasi-steady state   | 1   | 22,470   |
-| Softening           | Monotonic hardening  | 2   | 25,750   |
-| Quasi-steady state  | Quasi-steady state   | 3   | 12,436   |
-| Quasi-steady state  | Monotonic hardening  | 4   | 10,199   |
-| Monotonic hardening | Monotonic hardening  | 5   | 12,166   |
+| Softening           | Softening            | 0   | 19,283   |
+| Softening           | Quasi-steady state   | 1   | 12,429   |
+| Softening           | Monotonic hardening  | 2   | 36,623   |
+| Quasi-steady state  | Quasi-steady state   | 3   |  5,733   |
+| Quasi-steady state  | Monotonic hardening  | 4   |  6,922   |
+| Monotonic hardening | Monotonic hardening  | 5   | 19,010   |
+
+
+**`eps*` represents normalized axial strain! Let `eps* := epsilon_a * Ir * (p0)^(n_e - 1)`**
 
 
 | ID      | 0                  | 1                  | 2                  | 3                  | 4                  | 5                  |
